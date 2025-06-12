@@ -1,0 +1,14 @@
+{
+  "name": "flight-planner-playwright-tests",
+  "version": "1.0.0",
+  "description": "## Installing Playwright npm init playwright@latest  npx playwright test npx playwright show-report",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.53.0",
+    "@types/node": "^24.0.1"
+  }
+}
