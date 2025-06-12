@@ -1,10 +1,12 @@
 import { test, expect } from '@playwright/test';
 
-test('has title', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+test('has logo', async ({ page }) => {
+  await page.goto('https://flylitchi.com/hub');
 
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Playwright/);
+  // Expect a logo
+  const locator = page.locator('.btn.litchilogo');
+
+  await expect(locator).toBeVisible();
 });
 
 test('get started link', async ({ page }) => {
