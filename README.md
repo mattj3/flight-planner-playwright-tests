@@ -1,7 +1,7 @@
 # flight-planner-playwright-tests
 
 ## Installing Playwright
-npm init playwright@latest 
+npm init playwright@latest
 npx playwright test
 npx playwright show-report 
 
