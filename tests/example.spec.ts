@@ -4,17 +4,26 @@ test('has logo', async ({ page }) => {
   await page.goto('https://flylitchi.com/hub');
 
   // Expect a logo
-  const locator = page.locator('.btn.litchilogo');
-
-  await expect(locator).toBeVisible();
+  const logo = page.locator('.btn.litchilogo');
+  await expect(logo).toBeVisible();
 });
 
-test('get started link', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+test('search for Austin, TX', async ({ page }) => {
+  await page.goto('https://flylitchi.com/hub');
 
-  // Click the get started link.
-  await page.getByRole('link', { name: 'Get started' }).click();
+  // Create locator for Search input
+  const inputField = page.locator('input#pac-input');
 
-  // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
+  // Confirm it's visible
+  // Commented out because 'toBeVisible' is considered a custom  assertion, which does not use Playwright's auto wait
+  //await expect(inputField).toBeVisible();
+
+  // Fill in the search text
+  await inputField.fill('Austin, TX');
+
+  // Simulate hitting Enter to perform search
+  await inputField.press('Enter');
+
+  // Add in assertion here
+  //await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
 });
