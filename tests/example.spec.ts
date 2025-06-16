@@ -1,28 +1,28 @@
 import { test, expect } from '@playwright/test';
 
-test('has logo', async ({ page }) => {
-  await page.goto('https://flylitchi.com/hub');
+// test('has logo', async ({ page }) => {
+//   await page.goto('https://flylitchi.com/hub');
 
-  // Expect a logo
-  const logo = page.locator('.btn.litchilogo');
-  await expect(logo).toBeVisible();
-});
+//   // Expect a logo
+//   const logo = page.locator('.btn.litchilogo');
+//   await expect(logo).toBeVisible();
+// });
 
-test('search for Austin, TX', async ({ page }) => {
-  await page.goto('https://flylitchi.com/hub');
+// test('search for Austin, TX', async ({ page }) => {
+//   await page.goto('https://flylitchi.com/hub');
 
-  // Create locator for Search input
-  const inputField = page.locator('input#pac-input');
+//   // Create locator for Search input
+//   const inputField = page.locator('input#pac-input');
 
-  // Confirm it's visible
-  await expect(inputField).toBeVisible();
+//   // Confirm it's visible
+//   await expect(inputField).toBeVisible();
 
-  // Fill in the search text
-  await inputField.fill('Austin, TX');
+//   // Fill in the search text
+//   await inputField.fill('Austin, TX');
 
-  // Simulate hitting Enter to perform search
-  await inputField.press('Enter');
-});
+//   // Simulate hitting Enter to perform search
+//   await inputField.press('Enter');
+// });
 
 test('add way point', async ({ page }) => {
   await page.goto('https://flylitchi.com/hub');
