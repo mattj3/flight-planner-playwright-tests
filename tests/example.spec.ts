@@ -15,7 +15,6 @@ test('search for Austin, TX', async ({ page }) => {
   const inputField = page.locator('input#pac-input');
 
   // Confirm it's visible
-  // Commented out because 'toBeVisible' is considered a custom  assertion, which does not use Playwright's auto wait
   await expect(inputField).toBeVisible();
 
   // Fill in the search text

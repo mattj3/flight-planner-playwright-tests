@@ -27,7 +27,7 @@ export default defineConfig({
   use: {
     headless: false,
     launchOptions: {
-      slowMo: 250,  // Apply 500ms slow motion
+      slowMo: 250,  // Apply 250ms slow motion, change to more if required
     },
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://localhost:3000',
