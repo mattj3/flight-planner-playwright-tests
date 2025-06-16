@@ -26,6 +26,9 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     headless: false,
+    launchOptions: {
+      slowMo: 250,  // Apply 500ms slow motion
+    },
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://localhost:3000',
 
