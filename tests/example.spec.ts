@@ -41,7 +41,7 @@ test('add way point', async ({ page }) => {
   // Get viewport size
   const { width, height } = page.viewportSize()!;
 
-  // Click the center of the viewport
+  // Click the center of the viewport (center of map for flight tracker)
   await page.mouse.click(width / 2, height / 2);
 
   // Ensure the element exists and retrieve its value
