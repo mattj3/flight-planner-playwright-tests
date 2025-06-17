@@ -1,10 +1,10 @@
-import { test, expect } from '@playwright/test';
-import { LitchiHubPage } from '../pages/litchiHub.page';
+import { test, expect } from "@playwright/test";
+import { LitchiHubPage } from "../pages/litchiHub.page";
 
-test('Verify logo visibility', async ({ page }) => {
-    const hub = new LitchiHubPage(page);
+test("Verify logo visibility", async ({ page }) => {
+  const hub = new LitchiHubPage(page);
 
-    await hub.goto();
+  await hub.goto();
 
-    expect(await hub.isLogoVisible()).toBeTruthy();
+  expect(await hub.isLogoVisible()).toBeTruthy();
 });
