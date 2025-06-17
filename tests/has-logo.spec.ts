@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { LitchiHubPage } from "../pages/litchiHub.page";
+import { LitchiHubPage } from "../pages/litchi-hub.page";
 
 test("should verify logo is visible", async ({ page }) => {
   const hub = new LitchiHubPage(page);

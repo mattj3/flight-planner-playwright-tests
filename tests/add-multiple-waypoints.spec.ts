@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { LitchiHubPage } from "../pages/litchiHub.page";
+import { LitchiHubPage } from "../pages/litchi-hub.page";
 
 test("should set multiple waypoints and validate latitude inputs", async ({
   page,
