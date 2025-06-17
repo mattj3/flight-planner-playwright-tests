@@ -1,5 +1,5 @@
 # flight-planner-playwright-tests  
-**Flight Planner Playwright Tests** is a lean suite of Playwright tests designed to validate the core flows of the browser-based flight planning app, [Fly Litchi](https://flylitchi.com). The suite is structured with tests in the `tests/` folder and page objects in the `pages/` folder, featuring examples for verifying the display of the logo, adding waypoints, and simulating randomized flight-path scenarios. All tests are orchestrated through a single `playwright.config.ts` file and can be run using standard Playwright CLI commands.
+**Flight Planner Playwright Tests** is a lean suite of Playwright tests designed to validate the core flows of the browser-based flight planning app, [Litchi Hub](https://flylitchi.com/hub). The suite is structured with tests in the `tests/` folder and page objects in the `pages/` folder, featuring examples for verifying the display of the logo, adding waypoints, and simulating randomized flight-path scenarios. All tests are orchestrated through a single `playwright.config.ts` file and can be run using standard Playwright CLI commands.
 
 Below is a preview of test output for `tests/random-flight-path.spec.ts`:
 
