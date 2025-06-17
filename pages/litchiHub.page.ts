@@ -4,13 +4,17 @@ export class LitchiHubPage {
   readonly page: Page;
   readonly searchInput: Locator;
   readonly latInput: Locator;
+  readonly longInput: Locator;
   readonly logo: Locator;
+  readonly distance: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.searchInput = page.locator("input#pac-input");
     this.latInput = page.locator("#et-lat");
+    this.longInput = page.locator("#et-long");
     this.logo = page.locator(".btn.litchilogo");
+    this.distance = page.locator("#label-distance");
   }
 
   async goto(): Promise<void> {
@@ -23,20 +27,18 @@ export class LitchiHubPage {
 
   async performSearch(text: string): Promise<void> {
     await this.searchInput.isVisible();
-
     // Fill in the search text and validate
     await this.searchInput.fill(text);
-
     // Simulate hitting Enter to perform search
     await this.searchInput.press("Enter");
   }
 
   async clickOnMap(offset?: number): Promise<void> {
     const { width, height } = this.page.viewportSize()!;
-
     // Ensure offset has a valid value; default to center if it's not set properly
     const xOffset = offset ? width / offset : width / 2;
     const yOffset = offset ? height / offset : height / 2;
+
     await this.page.mouse.click(xOffset, yOffset);
   }
 
@@ -58,7 +60,7 @@ export class LitchiHubPage {
   }
 
   async getLatitudeValue(): Promise<string> {
-    const latInput = this.page.locator("#et-lat");
+    const latInput = this.latInput;
     await latInput.waitFor({ state: "visible" });
     const latInputValue = await latInput.inputValue();
 
@@ -66,7 +68,7 @@ export class LitchiHubPage {
   }
 
   async getLongitudeValue(): Promise<string> {
-    const longInput = this.page.locator("#et-long");
+    const longInput = this.longInput;
     await longInput.waitFor({ state: "visible" });
     const longInputValue = await longInput.inputValue();
 
@@ -74,9 +76,7 @@ export class LitchiHubPage {
   }
 
   async getTotalDistance(): Promise<string> {
-    const distanceValue = await this.page
-      .locator("#label-distance")
-      .innerText();
+    const distanceValue = await this.distance.innerText();
 
     return distanceValue;
   }
