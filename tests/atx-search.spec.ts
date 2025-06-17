@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { LitchiHubPage } from "../pages/litchiHub.page";
 
-test("Perform search", async ({ page }) => {
+test("should search, and bring into view, Austin, TX", async ({ page }) => {
   const hub = new LitchiHubPage(page);
 
   await hub.goto();
