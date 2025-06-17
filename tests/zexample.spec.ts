@@ -1,3 +1,4 @@
+// Pre POM tests
 // import { test, expect } from '@playwright/test';
 
 // test('has logo', async ({ page }) => {
