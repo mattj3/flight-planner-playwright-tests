@@ -11,7 +11,7 @@ Below is a preview of test output for `tests/random-flight-path.spec.ts`:
 ```
 playwright-tests/
 ├── pages/
-│   └── litchiHub.page.ts
+│   └── litchi-hub.page.ts
 │
 ├── tests/
 │   ├── add-multiple-waypoints.spec.ts
