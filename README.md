@@ -1,23 +1,27 @@
 # flight-planner-playwright-tests  
-```flight-planner-playwright-tests/tests/random-flight-path.spec.ts```  
+**Flight Planner Playwright Tests** is a lean suite of Playwright tests designed to validate the core flows of the browser-based flight planning app, [Fly Litchi](https://flylitchi.com). The suite is structured with tests in the `tests/` folder and page objects in the `pages/` folder, featuring examples for verifying the display of the logo, adding waypoints, and simulating randomized flight-path scenarios. All tests are orchestrated through a single `playwright.config.ts` file and can be run using standard Playwright CLI commands.
+
+Below is a preview of test output for `tests/random-flight-path.spec.ts`:
 
 ![Test Preview](images/screenshot-example.png)
 
-## File Structure (example)
+## File Structure  
 ```
 playwright-tests/
-├── tests/
-│   ├── login.spec.ts
-│   ├── login-invalid.spec.ts
-│   └── ...                  # Other small tests
-│
 ├── pages/
-│   └── login.page.ts
+│   └── litchiHub.page.ts
+│
+├── tests/
+│   ├── add-multiple-waypoints.spec.ts
+│   ├── add-waypoint.spec.ts
+│   ├── atx-search.spec.ts
+│   ├── has-logo.spec.ts
+│   └── random-flight-path.spec.ts
 │
 ├── .gitignore
-├── playwright.config.ts
-├── tsconfig.json
+├── package-lock.json
 ├── package.json
+├── playwright.config.ts
 └── README.md
 ```
 ## Running Playwright
@@ -26,10 +30,10 @@ playwright-tests/
 npx playwright test  
 
 # Run a specific test  
-npx playwright test my-test.spec.ts  
+npx playwright test add-waypoint.spec.ts  
 
 # Run a test by title  
-npx playwright test -g "should add a waypoint"  
+npx playwright test -g "should set waypoint and validate latitude input"  
 
 # Run tests in headed mode  
 npx playwright test --headed  
