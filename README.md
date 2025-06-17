@@ -1,4 +1,8 @@
 # flight-planner-playwright-tests  
+```flight-planner-playwright-tests/tests/random-flight-path.spec.ts```  
+
+![Test Preview](images/screenshot-example.png)
+
 ## File Structure (example)
 ```
 playwright-tests/
