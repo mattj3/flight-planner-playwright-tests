@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+// import { test, expect } from '@playwright/test';
 
 // test('has logo', async ({ page }) => {
 //   await page.goto('https://flylitchi.com/hub');
@@ -24,30 +24,31 @@ import { test, expect } from '@playwright/test';
 //   await inputField.press('Enter');
 // });
 
-test('add way point', async ({ page }) => {
-  await page.goto('https://flylitchi.com/hub');
+// test('add way point', async ({ page }) => {
+//   await page.goto('https://flylitchi.com/hub');
 
-  // Create locator for Search input
-  const inputField = page.locator('input#pac-input');
-  await expect(inputField).toBeVisible();
+//   // Create locator for Search input
+//   const inputField = page.locator('input#pac-input');
+//   await expect(inputField).toBeVisible();
 
-  // Fill in the search text
-  await inputField.fill('Austin, TX');
-  await expect(inputField).toHaveValue('Austin, TX');
+//   // Fill in the search text
+//   await inputField.fill('Austin, TX');
+//   await expect(inputField).toHaveValue('Austin, TX');
 
-  // Simulate hitting Enter to perform search
-  await inputField.press('Enter');
+//   // Simulate hitting Enter to perform search
+//   await inputField.press('Enter');
 
-  // Get viewport size
-  const { width, height } = page.viewportSize()!;
+//   // Get viewport size
+//   const { width, height } = page.viewportSize()!;
+//   console.log(width, height);
 
-  // Click the center of the viewport (center of map for flight tracker)
-  await page.mouse.click(width / 2, height / 2);
+//   // Click the center of the viewport (center of map for flight tracker)
+//   await page.mouse.click(width / 2, height / 2);
 
-  // Ensure the element exists and retrieve its value
-  const latInput = page.locator('#et-lat');
-  // Wait until the element is visible and stable before interacting
-  await latInput.waitFor({ state: 'visible' });
-  const latInputValue = await latInput.inputValue();
-  console.log(`Latitude input value: ${latInputValue}`);
-});
+//   // Ensure the element exists and retrieve its value
+//   const latInput = page.locator('#et-lat');
+//   // Wait until the element is visible and stable before interacting
+//   await latInput.waitFor({ state: 'visible' });
+//   const latInputValue = await latInput.inputValue();
+//   console.log(`Latitude input value: ${latInputValue}`);
+// });

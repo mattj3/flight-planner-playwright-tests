@@ -1,4 +1,3 @@
-// pages/litchiHub.page.ts
 import { Page, Locator, expect } from '@playwright/test';
 
 export class LitchiHubPage {
@@ -18,7 +17,6 @@ export class LitchiHubPage {
 
   async goto(): Promise<void> {
     await this.page.goto('https://flylitchi.com/hub');
-    // await this.page.waitForLoadState('networkidle');
   }
 
   async isLogoVisible(): Promise<boolean> {
@@ -35,29 +33,54 @@ export class LitchiHubPage {
     await this.searchInput.press('Enter');
   }
 
-  async clickOnMap(x: number, y: number): Promise<void> {
-    const box = await this.mapCanvas.boundingBox();
-    if (box) {
-      await this.page.mouse.click(box.x + x, box.y + y);
+  async clickOnMap(offset?:number): Promise<void> {
+    const { width, height } = this.page.viewportSize()!;
+
+    // Ensure offset has a valid value; default to center if it's not set properly
+    const xOffset = offset ? width / offset : width / 2;
+    const yOffset = offset ? height / offset : height / 2;
+
+    await this.page.mouse.click(xOffset, yOffset);
+  }
+
+  async randomClicksOnMap(numOfClicks:number): Promise<void> {
+    const { width, height } = this.page.viewportSize()!;
+
+    function getRandomInt(min: number, max: number): number {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    for (let i = 0; i < numOfClicks;) {
+      let randomValue = getRandomInt(2, 10);
+      let randomValue2 = getRandomInt(2, 10);
+      let xOffset = randomValue ? width / randomValue : width / 2;
+      let yOffset = randomValue2 ? height / randomValue2 : height / 2;
+
+      await this.page.mouse.click(xOffset, yOffset);
+      i++;
     }
   }
 
-  // Add waypoint function here
+  async getLatitudeValue(): Promise<string> {
+    const latInput = this.page.locator('#et-lat');
+    await latInput.waitFor({ state: 'visible' });
+    const latInputValue = await latInput.inputValue();
 
-  // async fillLatitude(lat: string): Promise<void> {
-  //   await this.latInput.fill(lat);
-  // }
+    return latInputValue;
+  }
 
-  // async getLatitude(): Promise<string> {
-  //   return this.latInput.inputValue();
-  // }
+  async getLongitudeValue(): Promise<string> {
+    const longInput = this.page.locator('#et-long');
+    await longInput.waitFor({ state: 'visible' });
+    const longInputValue = await longInput.inputValue();
 
-  // async expectLatitudeToBe(expected: string): Promise<void> {
-  //   const actual = await this.getLatitude();
-  //   if (actual !== expected) {
-  //     throw new Error(`Expected latitude to be "${expected}", but got "${actual}"`);
-  //   }
-  // }
+    return longInputValue;
+  }
+
+  async getTotalDistance(): Promise<string> {
+    const distanceValue = await this.page.locator('#label-distance').innerText();
+    return distanceValue;
+  }
 
   async takeScreenshot(): Promise<void> {
     const timestamp = new Date().toISOString().replace(/:/g, '-');
