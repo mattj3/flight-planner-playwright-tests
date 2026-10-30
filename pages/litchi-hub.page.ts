@@ -23,16 +23,47 @@ export class LitchiHubPage {
     await expect(this.searchInput).toBeVisible();
   }
 
-  /** Types a place into the map search box and submits it. */
+  /**
+   * Types a place into the map search box, submits it, and waits until the
+   * map has finished moving: first for the Google Places/geocoder response,
+   * then for map-tile requests to go quiet. Both are polled conditions, not
+   * fixed sleeps. ("networkidle" cannot be used: the page never reaches it.)
+   */
   async performSearch(text: string): Promise<void> {
     await expect(this.searchInput).toBeVisible();
     await this.searchInput.fill(text);
     await expect(this.searchInput).toHaveValue(text);
-    await this.searchInput.press("Enter");
-    // Give the geocoder time to respond and the map time to pan. The map
-    // streams tiles continuously, so "networkidle" is never reached and
-    // cannot be used as the signal here.
-    await this.page.waitForTimeout(2_500);
+
+    const seen: string[] = [];
+    let lastMapRequest = Date.now();
+    const onRequest = (url: string) => {
+      if (MAP_HOST.test(url)) {
+        seen.push(url);
+        lastMapRequest = Date.now();
+      }
+    };
+    const listener = (req: { url(): string }) => onRequest(req.url());
+    this.page.on("request", listener);
+    try {
+      await this.searchInput.press("Enter");
+      try {
+        await expect
+          .poll(() => seen.some((u) => SEARCH_REQUEST.test(u)), { timeout: 15_000 })
+          .toBe(true);
+      } catch {
+        const sample = seen.slice(-25).map((u) => u.split("?")[0]);
+        throw new Error(
+          `No Places/geocoder request seen after searching "${text}". ` +
+            `Map requests observed:\n${sample.join("\n") || "(none)"}`,
+        );
+      }
+      // The map pans after the response; wait for tile loading to settle.
+      await expect
+        .poll(() => Date.now() - lastMapRequest, { timeout: 15_000, intervals: [250] })
+        .toBeGreaterThan(MAP_QUIET_MS);
+    } finally {
+      this.page.off("request", listener);
+    }
   }
 
   /**
@@ -87,6 +118,13 @@ export class LitchiHubPage {
     return size;
   }
 }
+
+/** Requests to Google Maps hosts (API, tiles, imagery). */
+const MAP_HOST = /^https:\/\/([a-z0-9-]+\.)*(googleapis\.com|gstatic\.com|google\.com)\//i;
+/** A Places search / autocomplete / geocode call made when a search is submitted. */
+const SEARCH_REQUEST = /(place|geocod|autocomplet|findplace|searchbox|textsearch)/i;
+/** How long map-tile requests must be quiet before the map counts as settled. */
+const MAP_QUIET_MS = 750;
 
 /** Small deterministic PRNG (mulberry32). */
 export function mulberry32(seed: number): () => number {

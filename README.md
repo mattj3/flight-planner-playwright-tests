@@ -16,6 +16,7 @@ npm test
 - **Assertions on values, not presence.** Coordinates are parsed and checked against a bounding box around Austin, TX; the second of two waypoints must be north-west of the first; the mission distance must match a number-plus-unit pattern and be greater than zero.
 - **Auto-retrying assertions** (`toBeVisible`, `toHaveValue`, `toHaveText`) instead of `isVisible()` + `toBeTruthy()`.
 - **Reproducible randomness.** The random flight path uses a seeded generator; the seed is in the test title and can be overridden with `FLIGHT_SEED=123 npm test`.
+- **Condition-based waits.** After a search the page object waits for the Places/geocoder request and then for map-tile requests to go quiet, using `expect.poll`; there are no fixed sleeps.
 - **Flake policy for a live third-party site.** Tests that depend on the geocoder or map tiles are tagged `@external` and retried twice in CI only; page-load checks are never retried.
 - **CI with evidence.** GitHub Actions runs lint, format check, typecheck and the suite on every push and PR, plus weekly. The HTML report, with traces, screenshots and video of any failure, is uploaded as an artifact.
 
@@ -46,7 +47,7 @@ A random five-waypoint mission planned by `random-flight-path.spec.ts`:
 | `npm run report`                                              | Open the last HTML report                                       |
 | `npm run lint` / `npm run typecheck` / `npm run format:check` | Static checks run in CI                                         |
 
-Run one spec with `npx playwright test add-waypoint`, or only the offline checks with `npx playwright test --project=chromium`.
+Run one spec with `npx playwright test add-waypoint`, only the offline checks with `npx playwright test --grep @offline`, or everything except the geocoder-dependent tests with `npx playwright test --project=chromium` (this still loads the live page).
 
 ## Project layout
 

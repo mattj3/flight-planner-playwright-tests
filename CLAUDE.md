@@ -8,7 +8,7 @@ CI: `.github/workflows/playwright.yml`, runs on push to main, PRs, weekly schedu
 Do not:
 
 - Use `toBeTruthy()` on strings or numbers; assert the value (range, pattern, equality).
-- Add `waitForTimeout` in tests; put waits in the page object behind a named method.
+- Use `waitForTimeout` anywhere (lint enforces this); wait on a condition with `expect.poll` or a web-first assertion.
 - Invent selectors. Every locator in `pages/` must be verified against the live site.
 - Hard-code `headless: false` or `slowMo` in the config (use `npm run test:headed`, `SLOWMO=500`).
 

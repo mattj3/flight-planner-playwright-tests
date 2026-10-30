@@ -13,7 +13,6 @@ export default tseslint.config(
       ...playwright.configs["flat/recommended"].rules,
       // Assertions live in page-object helpers (getLatitude etc.) as well as in tests.
       "playwright/expect-expect": ["warn", { assertFunctionNames: ["expect"] }],
-      "playwright/no-wait-for-timeout": "off",
     },
   },
 );
