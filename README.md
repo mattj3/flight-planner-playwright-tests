@@ -1,69 +1,81 @@
 # flight-planner-playwright-tests
 
-**Flight Planner Playwright Tests** is a lean suite of Playwright tests designed to validate the core flows of the browser-based flight planning app, [Litchi Hub](https://flylitchi.com/hub). The suite is structured with tests in the `tests/` folder and page objects in the `pages/` folder, featuring examples for verifying the display of the logo, adding waypoints, and simulating randomized flight-path scenarios. All tests are orchestrated through a single `playwright.config.ts` file and can be run using standard Playwright CLI commands.
+[![Playwright tests](https://github.com/mattj3/flight-planner-playwright-tests/actions/workflows/playwright.yml/badge.svg)](https://github.com/mattj3/flight-planner-playwright-tests/actions/workflows/playwright.yml)
 
-Below is a preview of test output for `tests/random-flight-path.spec.ts`:
+End-to-end tests for [Litchi Hub](https://flylitchi.com/hub), a browser-based drone mission planner, written in **Playwright + TypeScript** with a page object, real value assertions and CI that keeps traces of every failure.
 
-![Test Preview](images/screenshot-example.png)
+```bash
+npm ci
+npx playwright install chromium
+npm test
+```
 
-## File Structure
+## What this demonstrates
+
+- **Page Object Model.** Every locator lives in [`pages/litchi-hub.page.ts`](pages/litchi-hub.page.ts); specs read as user steps.
+- **Assertions on values, not presence.** Coordinates are parsed and checked against a bounding box around Austin, TX; the second of two waypoints must be north-west of the first; the mission distance must match a number-plus-unit pattern and be greater than zero.
+- **Auto-retrying assertions** (`toBeVisible`, `toHaveValue`, `toHaveText`) instead of `isVisible()` + `toBeTruthy()`.
+- **Reproducible randomness.** The random flight path uses a seeded generator; the seed is in the test title and can be overridden with `FLIGHT_SEED=123 npm test`.
+- **Condition-based waits.** After a search the page object waits for the Places/geocoder request and then for map-tile requests to go quiet, using `expect.poll`; there are no fixed sleeps.
+- **Flake policy for a live third-party site.** Tests that depend on the geocoder or map tiles are tagged `@external` and retried twice in CI only; page-load checks are never retried.
+- **CI with evidence.** GitHub Actions runs lint, format check, typecheck and the suite on every push and PR, plus weekly. The HTML report, with traces, screenshots and video of any failure, is uploaded as an artifact.
+
+## Sample run
+
+A random five-waypoint mission planned by `random-flight-path.spec.ts`:
+
+![Random flight path over Austin](images/screenshot-example.png)
+
+## Tests
+
+| Spec                             | Checks                                                                                      |
+| -------------------------------- | ------------------------------------------------------------------------------------------- |
+| `has-logo.spec.ts`               | The planner loads and shows its logo                                                        |
+| `atx-search.spec.ts`             | Searching "Austin, TX" moves the map to Austin (a centre click lands inside the Austin box) |
+| `add-waypoint.spec.ts`           | Clicking the map fills in finite, in-range latitude and longitude                           |
+| `add-multiple-waypoints.spec.ts` | A second waypoint up and left of the first has a higher latitude and lower longitude        |
+| `random-flight-path.spec.ts`     | Five seeded random waypoints produce a positive total distance                              |
+| `prng.spec.ts`                   | Offline: the seeded generator is deterministic and stays in [0, 1)                          |
+
+## Scripts
+
+| Command                                                       | What it does                                                    |
+| ------------------------------------------------------------- | --------------------------------------------------------------- |
+| `npm test`                                                    | Run the whole suite headless                                    |
+| `npm run test:headed`                                         | Watch it run (`SLOWMO=500 npm run test:headed` to slow it down) |
+| `npm run test:ui`                                             | Playwright UI mode                                              |
+| `npm run report`                                              | Open the last HTML report                                       |
+| `npm run lint` / `npm run typecheck` / `npm run format:check` | Static checks run in CI                                         |
+
+Run one spec with `npx playwright test add-waypoint`, only the offline checks with `npx playwright test --grep @offline`, or everything except the geocoder-dependent tests with `npx playwright test --project=chromium` (this still loads the live page).
+
+## Project layout
 
 ```
-playwright-tests/
+flight-planner-playwright-tests/
+├── .github/
+│   ├── dependabot.yml
+│   └── workflows/playwright.yml
 ├── pages/
-│   └── litchi-hub.page.ts
-│
+│   └── litchi-hub.page.ts      # page object + seeded PRNG
 ├── tests/
+│   ├── fixtures.ts             # Austin bounding box, distance pattern
 │   ├── add-multiple-waypoints.spec.ts
 │   ├── add-waypoint.spec.ts
 │   ├── atx-search.spec.ts
 │   ├── has-logo.spec.ts
+│   ├── prng.spec.ts
 │   └── random-flight-path.spec.ts
-│
-├── .gitignore
-├── package-lock.json
-├── package.json
+├── eslint.config.mjs
 ├── playwright.config.ts
-└── README.md
+├── tsconfig.json
+└── package.json
 ```
 
-## Running Playwright
+## When the live site changes
 
-```bash
-# Run all tests
-npx playwright test
+This suite tests a site it does not own, so a red run can mean Litchi changed its page rather than a regression. Open the failing test's trace from the `playwright-report` artifact, compare the locator in `pages/litchi-hub.page.ts` with the live DOM, and update the locator there. Specs should not need to change.
 
-# Run a specific test
-npx playwright test add-waypoint.spec.ts
+## Licence
 
-# Run a test by title
-npx playwright test -g "should set waypoint and validate latitude input"
-
-# Run tests in headed mode
-npx playwright test --headed
-
-# Run tests in debug mode
-npx playwright test --debug
-
-# Run tests in UI mode
-npx playwright test --ui
-
-# Run tests for specific browser
-npx playwright test --project=chromium
-```
-
-## Installing Playwright
-
-```bash
-npm init playwright@latest
-npx playwright test
-npx playwright show-report
-```
-
-## Updating Playwright
-
-```bash
-npm install -D @playwright/test@latest
-npx playwright install --with-deps
-npx playwright --version
-```
+[MIT](LICENSE)

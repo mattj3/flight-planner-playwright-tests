@@ -1,14 +1,31 @@
 {
   "name": "flight-planner-playwright-tests",
   "version": "1.0.0",
-  "description": "## Installing Playwright npm init playwright@latest  npx playwright test npx playwright show-report",
-  "main": "index.js",
-  "scripts": {},
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "private": true,
+  "description": "Playwright + TypeScript page-object tests against the Litchi Hub flight-planning web app",
+  "license": "MIT",
+  "author": "Matt J",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit"
+  },
   "devDependencies": {
-    "@playwright/test": "^1.56.1",
-    "@types/node": "^24.0.1"
+    "@eslint/js": "^9.39.5",
+    "@playwright/test": "1.56.1",
+    "@types/node": "^24.0.1",
+    "eslint": "^9.39.5",
+    "eslint-plugin-playwright": "^2.12.1",
+    "prettier": "^3.9.10",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.72.1"
   }
 }
