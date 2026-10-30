@@ -29,9 +29,10 @@ export class LitchiHubPage {
     await this.searchInput.fill(text);
     await expect(this.searchInput).toHaveValue(text);
     await this.searchInput.press("Enter");
-    // Let the geocoder respond and the map pan before the next interaction.
-    await this.page.waitForLoadState("networkidle").catch(() => undefined);
-    await this.page.waitForTimeout(1_500);
+    // Give the geocoder time to respond and the map time to pan. The map
+    // streams tiles continuously, so "networkidle" is never reached and
+    // cannot be used as the signal here.
+    await this.page.waitForTimeout(2_500);
   }
 
   /**
