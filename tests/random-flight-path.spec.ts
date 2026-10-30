@@ -1,22 +1,21 @@
 import { test, expect } from "@playwright/test";
 import { LitchiHubPage } from "../pages/litchi-hub.page";
+import { AUSTIN, DISTANCE_PATTERN } from "./fixtures";
 
-test("should create random flightplan", async ({ page }) => {
+const SEED = Number(process.env.FLIGHT_SEED ?? 20261030);
+
+test(`a random 5-waypoint mission has a positive total distance (seed ${SEED}) @external`, async ({
+  page,
+}, testInfo) => {
+  testInfo.annotations.push({ type: "seed", description: String(SEED) });
   const hub = new LitchiHubPage(page);
-
-  // Navigate to the page
   await hub.goto();
+  await hub.performSearch(AUSTIN.query);
 
-  // Perform search
-  await hub.performSearch("Austin, TX");
+  await hub.randomClicksOnMap(5, SEED);
 
-  // Randomly click on map the provided number of times
-  await hub.randomClicksOnMap(5);
-
-  // Get total flightplan distance
-  const totalDistance = await hub.getTotalDistance();
-  console.log(totalDistance);
-
-  // Take screenshot of flightplan
-  await hub.takeScreenshot();
+  await expect(hub.distance).toHaveText(DISTANCE_PATTERN);
+  const text = await hub.getTotalDistanceText();
+  const value = Number(text.match(DISTANCE_PATTERN)![1].replace(",", "."));
+  expect(value).toBeGreaterThan(0);
 });

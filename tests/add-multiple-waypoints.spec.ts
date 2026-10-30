@@ -1,41 +1,26 @@
 import { test, expect } from "@playwright/test";
 import { LitchiHubPage } from "../pages/litchi-hub.page";
+import { AUSTIN } from "./fixtures";
 
-test("should set multiple waypoints and validate latitude inputs", async ({
+test("a second waypoint to the north-west has a higher latitude and lower longitude @external", async ({
   page,
 }) => {
   const hub = new LitchiHubPage(page);
-
-  // Navigate to the page
   await hub.goto();
+  await hub.performSearch(AUSTIN.query);
 
-  // Perform search
-  await hub.performSearch("Austin, TX");
+  await hub.clickOnMap(0.5, 0.5);
+  const first = { lat: await hub.getLatitude(), lng: await hub.getLongitude() };
 
-  // Click on the map to add first waypoint (click middle of screen)
-  await hub.clickOnMap();
+  await hub.clickOnMap(0.35, 0.35);
+  // The coordinate fields show the selected (latest) waypoint.
+  await expect(hub.latInput).not.toHaveValue(String(first.lat));
+  const second = { lat: await hub.getLatitude(), lng: await hub.getLongitude() };
 
-  // Get latitude value
-  const latitude = await hub.getLatitudeValue();
-
-  // Print out latitude measurement value
-  console.log(`Latitude value 1: ${latitude}`);
-
-  // Validate latitude measurement
-  expect(latitude).toBeTruthy();
-
-  // Click on the map to add second waypoint
-  await hub.clickOnMap(3);
-
-  // Get latitude value
-  const latitudeTwo = await hub.getLatitudeValue();
-
-  // Print out latitude measurement value
-  console.log(`Latitude value 2: ${latitudeTwo}`);
-
-  // Validate latitude measurement
-  expect(latitudeTwo).toBeTruthy();
-
-  // Take screenshot
-  // await hub.takeScreenshot();
+  expect(second.lat).toBeGreaterThan(first.lat);
+  expect(second.lng).toBeLessThan(first.lng);
+  for (const p of [first, second]) {
+    expect(p.lat).toBeGreaterThanOrEqual(AUSTIN.lat.min);
+    expect(p.lat).toBeLessThanOrEqual(AUSTIN.lat.max);
+  }
 });

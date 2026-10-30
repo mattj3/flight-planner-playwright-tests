@@ -1,27 +1,20 @@
 import { test, expect } from "@playwright/test";
 import { LitchiHubPage } from "../pages/litchi-hub.page";
+import { AUSTIN } from "./fixtures";
 
-test("should set waypoint and validate latitude input", async ({ page }) => {
+test("adding a waypoint fills in valid coordinates @external", async ({ page }) => {
   const hub = new LitchiHubPage(page);
-
-  // Navigate to the page
   await hub.goto();
-
-  // Perform search
-  await hub.performSearch("Austin, TX");
-
-  // Click on the map to add a waypoint (click middle of screen)
+  await hub.performSearch(AUSTIN.query);
   await hub.clickOnMap();
 
-  // Get latitude value
-  const latitude = await hub.getLatitudeValue();
+  const lat = await hub.getLatitude();
+  const lng = await hub.getLongitude();
 
-  // Print out latitude measurement value
-  console.log(`Latitude value: ${latitude}`);
-
-  // Validate latitude measurement
-  expect(latitude).toBeTruthy();
-
-  // Take screenshot
-  // await hub.takeScreenshot();
+  expect(Number.isFinite(lat)).toBe(true);
+  expect(Number.isFinite(lng)).toBe(true);
+  expect(lat).toBeGreaterThanOrEqual(-90);
+  expect(lat).toBeLessThanOrEqual(90);
+  expect(lng).toBeGreaterThanOrEqual(-180);
+  expect(lng).toBeLessThanOrEqual(180);
 });
